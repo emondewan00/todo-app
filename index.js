@@ -8,6 +8,7 @@ import {name as appName} from './app.json';
 import React from 'react';
 import {Provider} from 'react-redux';
 import store from './src/store';
+import './global.css';
 
 AppRegistry.registerComponent(appName, () => () => (
   <React.StrictMode>
