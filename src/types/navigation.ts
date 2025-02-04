@@ -1,6 +1,12 @@
 export type RootStackParamList = {
-  Home: undefined;
+  HomeTabs: undefined;
   Task: {
     taskId: string;
   };
+};
+
+export type TabParamList = {
+  Home: undefined;
+  AddNew: undefined;
+  Calender: undefined;
 };
