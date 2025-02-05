@@ -1,12 +1,12 @@
 import React from 'react';
 import EmptyTask from '../components/EmptyTask';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView} from 'react-native';
 
 const Home = () => {
   return (
-    <ScrollView>
-      <SafeAreaView className="flex-1 h-full bg-black">
+    <ScrollView contentContainerClassName="flex-1 bg-[#121212]">
+      <SafeAreaView className="flex-1">
         <EmptyTask />
       </SafeAreaView>
     </ScrollView>

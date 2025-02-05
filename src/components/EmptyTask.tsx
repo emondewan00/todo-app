@@ -1,9 +1,9 @@
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text} from 'react-native';
 import React from 'react';
 
 const EmptyTask = () => {
   return (
-    <View className="">
+    <View className="flex items-center justify-center flex-1 ">
       <View>
         <Image
           source={require('../assets/images/Checklist-rafiki.png')}
