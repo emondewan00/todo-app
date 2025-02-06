@@ -1,34 +1,15 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {
-  createBottomTabNavigator,
-  type BottomTabBarButtonProps,
-} from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import AddNew from '../screens/AddNew';
 import Calender from '../screens/Calender';
-import {TabParamList} from '../types/navigation';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
-
+import type {TabParamList} from '../types/navigation';
+import {Image, View} from 'react-native';
 import Icon from '@react-native-vector-icons/fontawesome6';
+import TabButton from '../components/TabButton';
+import AddTabButton from '../components/AddTabButton';
 const Tab = createBottomTabNavigator<TabParamList>();
-
-const TabButton = ({
-  onPress,
-  accessibilityState,
-  ...rest
-}: BottomTabBarButtonProps) => {
-  console.log('TabButton Props:', accessibilityState, rest);
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={accessibilityState?.selected}
-      className="flex-1 items-center justify-center">
-      <Icon name="house" iconStyle="solid" size={20} color={'green'} />
-      <Text className="text-white text-sm mt-0.5">Home</Text>
-    </TouchableOpacity>
-  );
-};
 
 const TabNavigation = () => {
   return (
@@ -40,7 +21,6 @@ const TabNavigation = () => {
           position: 'absolute',
           borderTopWidth: 0,
         },
-        tabBarButton: props => <TabButton {...props} />,
       }}>
       <Tab.Screen
         name="Home"
@@ -69,38 +49,24 @@ const TabNavigation = () => {
             fontWeight: 'normal',
           },
           headerTitle: 'Index',
-          tabBarIcon: ({size, color}) => {
-            return (
-              <Icon name="house" size={size} iconStyle="solid" color={color} />
-            );
-          },
-          tabBarButton: props => <TabButton {...props} />,
+          tabBarButton: props => (
+            <TabButton {...props} iconName="house" title="Home" />
+          ),
         }}
       />
       <Tab.Screen
         name="AddNew"
         component={AddNew}
         options={{
-          title: 'Add New',
-          tabBarIcon: ({size, color}) => {
-            return (
-              <Icon name="plus" size={size} iconStyle="solid" color={color} />
-            );
-          },
+          headerShown: false,
+          tabBarButton: props => <AddTabButton {...props} />,
         }}
       />
       <Tab.Screen
         options={{
-          tabBarIcon: ({size}) => {
-            return (
-              <Icon
-                name="calendar-days"
-                size={size}
-                iconStyle="solid"
-                color={'white'}
-              />
-            );
-          },
+          tabBarButton: props => (
+            <TabButton {...props} title="Calender" iconName="calendar-days" />
+          ),
         }}
         name="Calender"
         component={Calender}
