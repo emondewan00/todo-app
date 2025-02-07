@@ -88,9 +88,7 @@ const TabNavigation = () => {
         transparent={true}
         animationType="slide"
         onRequestClose={() => setIsShowCreateModal(false)}>
-        <View className="flex-1 justify-end bg-black/40">
-          <AddTask onClose={() => setIsShowCreateModal(false)} />
-        </View>
+        <AddTask onClose={() => setIsShowCreateModal(false)} />
       </Modal>
     </>
   );

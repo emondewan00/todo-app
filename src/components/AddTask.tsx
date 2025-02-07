@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Keyboard,
   Alert,
+  Modal,
 } from 'react-native';
 import Icon from '@react-native-vector-icons/ionicons';
 import FAIcon from '@react-native-vector-icons/fontawesome6';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import Priority from './Priority';
 
 interface Task {
   title: string;
@@ -30,6 +32,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
   const [showDateTime, setShowDateTime] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTimeModal, setShowTimeModal] = useState(false);
+  const [priorityModal, setPriorityModal] = useState(false);
 
   const [taskData, setTaskData] = useState<Task>({
     title: '',
@@ -88,68 +91,78 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
   };
 
   return (
-    <View className="bg-[#363636] p-6 rounded-t-xl">
-      <Text className="text-white text-xl ">Add Task</Text>
-      <TextInput
-        className="border mt-3 border-white px-4 py-2 rounded text-white"
-        placeholderTextColor={'white'}
-        ref={inputRef}
-        onChangeText={text => onChange({name: 'title', value: text})}
-        placeholder="Do math homework"
-      />
-      <TextInput
-        className="border mt-3 border-white px-4 py-2 rounded text-white"
-        placeholderTextColor={'white'}
-        onChangeText={text => onChange({name: 'description', value: text})}
-        placeholder="Do chapter 2 for next week"
-      />
-      <View className="flex flex-row justify-between items-center mt-5">
-        <View className="flex-row gap-4">
-          <TouchableOpacity
-            onPress={() => {
-              setShowDateTime(true);
-              Keyboard.dismiss();
-            }}>
-            <Icon name="timer-outline" size={24} color="#fff" />
-          </TouchableOpacity>
+    <View className="flex-1 justify-end bg-black/40">
+      <View
+        className={`bg-[#363636] p-6 rounded-t-xl ${
+          priorityModal ? 'hidden' : 'block'
+        }`}>
+        <Text className="text-white text-xl ">Add Task</Text>
+        <TextInput
+          className="border mt-3 border-white px-4 py-2 rounded text-white"
+          placeholderTextColor={'white'}
+          ref={inputRef}
+          onChangeText={text => onChange({name: 'title', value: text})}
+          placeholder="Do math homework"
+        />
+        <TextInput
+          className="border mt-3 border-white px-4 py-2 rounded text-white"
+          placeholderTextColor={'white'}
+          onChangeText={text => onChange({name: 'description', value: text})}
+          placeholder="Do chapter 2 for next week"
+        />
+        <View className="flex flex-row justify-between items-center mt-5">
+          <View className="flex-row gap-4">
+            <TouchableOpacity
+              onPress={() => {
+                setShowDateTime(true);
+                Keyboard.dismiss();
+              }}>
+              <Icon name="timer-outline" size={24} color="#fff" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => onChange({name: 'priority', value: 'medium'})}>
-            <FAIcon name="tag" size={24} color="#fff" iconStyle="solid" />
-          </TouchableOpacity>
+            <TouchableOpacity>
+              <FAIcon name="tag" size={24} color="#fff" iconStyle="solid" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => onChange({name: 'priority', value: 'high'})}>
-            <Icon name="flag-outline" size={24} color="#fff" />
+            <TouchableOpacity onPress={() => setPriorityModal(true)}>
+              <Icon name="flag-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleSave}>
+            <Icon name="save-outline" size={24} color="#8687E7" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleSave}>
-          <Icon name="save-outline" size={24} color="#8687E7" />
+        <TouchableOpacity
+          onPress={onClose}
+          className="flex items-center justify-center mt-5">
+          <Text className="text-white text-sm">Close modal</Text>
         </TouchableOpacity>
+        {showDateTime && (
+          <RNDateTimePicker
+            testID="dateTimePicker"
+            value={selectedDate}
+            mode="date"
+            display="default"
+            onChange={handleDateChange}
+          />
+        )}
+        {showTimeModal && (
+          <RNDateTimePicker
+            testID="timePicker"
+            value={selectedDate}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
       </View>
-      <TouchableOpacity
-        onPress={onClose}
-        className="flex items-center justify-center mt-5">
-        <Text className="text-white text-sm">Close modal</Text>
-      </TouchableOpacity>
-      {showDateTime && (
-        <RNDateTimePicker
-          testID="dateTimePicker"
-          value={selectedDate}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-      {showTimeModal && (
-        <RNDateTimePicker
-          testID="timePicker"
-          value={selectedDate}
-          mode="time"
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
+      <Modal
+        visible={priorityModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setPriorityModal(false)}>
+        <Priority />
+      </Modal>
     </View>
   );
 };
