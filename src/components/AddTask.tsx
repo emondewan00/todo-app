@@ -12,15 +12,9 @@ import Icon from '@react-native-vector-icons/ionicons';
 import FAIcon from '@react-native-vector-icons/fontawesome6';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import Priority from './Priority';
-
-interface Task {
-  title: string;
-  description: string;
-  dueDate: number;
-  dueTime: number;
-  priority: 'low' | 'medium' | 'high';
-  completed: boolean;
-}
+import type {Task} from '../types/task';
+import {useAppDispatch} from '../hooks';
+import {addTask} from '../features/todo/todoSlice';
 
 interface OnChangeArgs {
   name: keyof Task;
@@ -29,17 +23,19 @@ interface OnChangeArgs {
 
 const AddTask = ({onClose}: {onClose: () => void}) => {
   const inputRef = useRef<TextInput | null>(null);
+  const dispatch = useAppDispatch();
   const [showDateTime, setShowDateTime] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showTimeModal, setShowTimeModal] = useState(false);
   const [priorityModal, setPriorityModal] = useState(false);
 
   const [taskData, setTaskData] = useState<Task>({
+    id: Date.now(),
     title: '',
     description: '',
     dueDate: Date.now(),
     dueTime: Date.now(),
-    priority: 'low',
+    priority: 1,
     completed: false,
   });
 
@@ -75,10 +71,10 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
   };
 
   const onChange = ({name, value}: OnChangeArgs) => {
-    setTaskData({
-      ...taskData,
+    setTaskData(prev => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleSave = () => {
@@ -86,8 +82,8 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-
-    console.log(taskData);
+    dispatch(addTask({...taskData, id: Date.now()}));
+    onClose();
   };
 
   return (
@@ -132,11 +128,9 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
             <Icon name="save-outline" size={24} color="#8687E7" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={onClose}
-          className="flex items-center justify-center mt-5">
-          <Text className="text-white text-sm">Close modal</Text>
-        </TouchableOpacity>
+
+        {/* modals  */}
+        {/* date modal  */}
         {showDateTime && (
           <RNDateTimePicker
             testID="dateTimePicker"
@@ -146,6 +140,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
             onChange={handleDateChange}
           />
         )}
+        {/* time modal  */}
         {showTimeModal && (
           <RNDateTimePicker
             testID="timePicker"
@@ -156,12 +151,19 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
           />
         )}
       </View>
+
+      {/* priority modal  */}
       <Modal
         visible={priorityModal}
         transparent={true}
         animationType="slide"
         onRequestClose={() => setPriorityModal(false)}>
-        <Priority />
+        <Priority
+          onClose={() => setPriorityModal(false)}
+          onChangePriority={(value: number) =>
+            onChange({name: 'priority', value})
+          }
+        />
       </Modal>
     </View>
   );
