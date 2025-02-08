@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useState} from 'react';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import AddNew from '../screens/AddNew';
@@ -10,10 +10,14 @@ import Icon from '@react-native-vector-icons/fontawesome6';
 import TabButton from '../components/TabButton';
 import AddTabButton from '../components/AddTabButton';
 import AddTask from '../components/AddTask';
+import {useAppDispatch, useAppSelector} from '../hooks';
+import {toggleAddTaskModal} from '../features/modal/modalSlice';
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const TabNavigation = () => {
-  const [isShowCreateModal, setIsShowCreateModal] = useState(false);
+  const {showAddTask} = useAppSelector(state => state.modal);
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <Tab.Navigator
@@ -65,7 +69,7 @@ const TabNavigation = () => {
             tabBarButton: props => (
               <AddTabButton
                 {...props}
-                onPress={() => setIsShowCreateModal(true)}
+                onPress={() => dispatch(toggleAddTaskModal())}
               />
             ),
           }}
@@ -84,11 +88,11 @@ const TabNavigation = () => {
 
       {/* modal for create task screen  */}
       <Modal
-        visible={isShowCreateModal}
+        visible={showAddTask}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setIsShowCreateModal(false)}>
-        <AddTask onClose={() => setIsShowCreateModal(false)} />
+        onRequestClose={() => dispatch(toggleAddTaskModal())}>
+        <AddTask onClose={() => dispatch(toggleAddTaskModal())} />
       </Modal>
     </>
   );

@@ -10,11 +10,18 @@ import {
 } from 'react-native';
 import Icon from '@react-native-vector-icons/ionicons';
 import FAIcon from '@react-native-vector-icons/fontawesome6';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker, {
+  type DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
 import Priority from './Priority';
 import type {Task} from '../types/task';
-import {useAppDispatch} from '../hooks';
+import {useAppDispatch, useAppSelector} from '../hooks';
 import {addTask} from '../features/todo/todoSlice';
+import {
+  toggleDateModal,
+  togglePriorityModal,
+  toggleTimeModal,
+} from '../features/modal/modalSlice';
 
 interface OnChangeArgs {
   name: keyof Task;
@@ -23,11 +30,12 @@ interface OnChangeArgs {
 
 const AddTask = ({onClose}: {onClose: () => void}) => {
   const inputRef = useRef<TextInput | null>(null);
+  const {showDate, showTime, showPriority} = useAppSelector(
+    state => state.modal,
+  );
   const dispatch = useAppDispatch();
-  const [showDateTime, setShowDateTime] = useState(false);
+
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showTimeModal, setShowTimeModal] = useState(false);
-  const [priorityModal, setPriorityModal] = useState(false);
 
   const [taskData, setTaskData] = useState<Task>({
     id: Date.now(),
@@ -48,26 +56,26 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleDateChange = (event: any, date?: Date) => {
-    setShowDateTime(false);
+  const handleDateChange = (event: DateTimePickerEvent, date?: Date) => {
     if (date) {
       setSelectedDate(date);
       setTaskData({
         ...taskData,
         dueDate: date.getTime(),
       });
-      setShowTimeModal(true);
+      dispatch(toggleDateModal(false));
+      dispatch(toggleTimeModal(true));
     }
   };
 
-  const handleTimeChange = (event: any, date?: Date) => {
-    setShowTimeModal(false);
+  const handleTimeChange = (event: DateTimePickerEvent, date?: Date) => {
     if (date) {
       setTaskData({
         ...taskData,
         dueTime: date.getTime(),
       });
     }
+    dispatch(toggleTimeModal(false));
   };
 
   const onChange = ({name, value}: OnChangeArgs) => {
@@ -90,7 +98,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
     <View className="flex-1 justify-end bg-black/40">
       <View
         className={`bg-[#363636] p-6 rounded-t-xl ${
-          priorityModal ? 'hidden' : 'block'
+          showPriority ? 'hidden' : 'block'
         }`}>
         <Text className="text-white text-xl ">Add Task</Text>
         <TextInput
@@ -110,7 +118,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
           <View className="flex-row gap-4">
             <TouchableOpacity
               onPress={() => {
-                setShowDateTime(true);
+                dispatch(toggleDateModal(true));
                 Keyboard.dismiss();
               }}>
               <Icon name="timer-outline" size={24} color="#fff" />
@@ -120,7 +128,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
               <FAIcon name="tag" size={24} color="#fff" iconStyle="solid" />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setPriorityModal(true)}>
+            <TouchableOpacity onPress={() => dispatch(togglePriorityModal())}>
               <Icon name="flag-outline" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -131,7 +139,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
 
         {/* modals  */}
         {/* date modal  */}
-        {showDateTime && (
+        {showDate && (
           <RNDateTimePicker
             testID="dateTimePicker"
             value={selectedDate}
@@ -141,7 +149,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
           />
         )}
         {/* time modal  */}
-        {showTimeModal && (
+        {showTime && (
           <RNDateTimePicker
             testID="timePicker"
             value={selectedDate}
@@ -154,12 +162,12 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
 
       {/* priority modal  */}
       <Modal
-        visible={priorityModal}
+        visible={showPriority}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setPriorityModal(false)}>
+        onRequestClose={() => dispatch(togglePriorityModal())}>
         <Priority
-          onClose={() => setPriorityModal(false)}
+          onClose={() => dispatch(togglePriorityModal())}
           onChangePriority={(value: number) =>
             onChange({name: 'priority', value})
           }
