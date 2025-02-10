@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import AddNew from '../screens/AddNew';
 import Calender from '../screens/Calender';
-import type {TabParamList} from '../types/navigation';
+import type {TabNavigationProps, TabParamList} from '../types/navigation';
 import {Image, Modal, View} from 'react-native';
 import Icon from '@react-native-vector-icons/fontawesome6';
 import TabButton from '../components/TabButton';
@@ -14,7 +14,7 @@ import {useAppDispatch, useAppSelector} from '../hooks';
 import {toggleAddTaskModal} from '../features/modal/modalSlice';
 const Tab = createBottomTabNavigator<TabParamList>();
 
-const TabNavigation = () => {
+const TabNavigation: React.FC<TabNavigationProps> = ({navigation}) => {
   const {showAddTask} = useAppSelector(state => state.modal);
   const dispatch = useAppDispatch();
 
@@ -92,7 +92,12 @@ const TabNavigation = () => {
         transparent={true}
         animationType="slide"
         onRequestClose={() => dispatch(toggleAddTaskModal())}>
-        <AddTask onClose={() => dispatch(toggleAddTaskModal())} />
+        <AddTask
+          onClose={() => {
+            dispatch(toggleAddTaskModal());
+            navigation.navigate('HomeTabs');
+          }}
+        />
       </Modal>
     </>
   );

@@ -1,12 +1,28 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {Task} from '../../types/task';
 
+interface TaskSection {
+  title: string;
+  data: Task[];
+}
+
 interface TasksState {
-  tasks: Task[];
+  tasks: TaskSection[];
+  readonly renderAbleTasks: TaskSection[];
 }
 
 const initialState: TasksState = {
-  tasks: [],
+  tasks: [
+    {
+      title: 'active',
+      data: [],
+    },
+    {
+      title: 'completed',
+      data: [],
+    },
+  ],
+  renderAbleTasks: [],
 };
 
 const tasksSlice = createSlice({
@@ -14,14 +30,29 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
-      state.tasks.push(action.payload);
+      const category = state.tasks.find(t => t.title === 'active');
+      if (category) {
+        category.data.push(action.payload);
+      }
+
+      // Update render able Tasks
+      state.renderAbleTasks = state.tasks.filter(
+        section => section.data.length > 0,
+      );
     },
     removeTask: (state, action) => {
-      state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      const {status, taskId} = action.payload;
+      const category = state.tasks.find(t => t.title === status);
+      if (category) {
+        category.data = category.data.filter(task => task.id !== taskId);
+      }
+      // Update render able Tasks
+      state.renderAbleTasks = state.tasks.filter(
+        section => section.data.length > 0,
+      );
     },
   },
 });
 
 export const {addTask, removeTask} = tasksSlice.actions;
-
 export default tasksSlice.reducer;

@@ -26,6 +26,11 @@ export interface TabButtonProps extends BottomTabBarButtonProps {
   iconName: 'house' | 'calendar-days';
 }
 
+export type TabNavigationProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList>,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
 export type AddNewScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'AddNew'>,
   NativeStackScreenProps<RootStackParamList>
