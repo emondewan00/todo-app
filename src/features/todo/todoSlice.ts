@@ -1,15 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import type {Task} from '../../types/task';
-
-interface TaskSection {
-  title: string;
-  data: Task[];
-}
-
-interface TasksState {
-  tasks: TaskSection[];
-  readonly renderAbleTasks: TaskSection[];
-}
+import type {TasksState} from '../../types/task';
 
 const initialState: TasksState = {
   tasks: [

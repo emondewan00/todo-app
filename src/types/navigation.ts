@@ -12,6 +12,7 @@ export type RootStackParamList = {
   HomeTabs: undefined;
   Task: {
     taskId: string;
+    sectionId: string;
   };
 };
 
@@ -27,8 +28,18 @@ export interface TabButtonProps extends BottomTabBarButtonProps {
 }
 
 export type TabNavigationProps = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList>,
+  NativeStackScreenProps<RootStackParamList, 'HomeTabs'>,
+  BottomTabScreenProps<TabParamList>
+>;
+
+export type HomeScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, 'Home'>,
   NativeStackScreenProps<RootStackParamList>
+>;
+
+export type TaskScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Task'
 >;
 
 export type AddNewScreenProps = CompositeScreenProps<

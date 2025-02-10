@@ -38,7 +38,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [taskData, setTaskData] = useState<Task>({
-    id: Date.now(),
+    id: Date.now().toString(),
     title: '',
     description: '',
     dueDate: Date.now(),
@@ -90,7 +90,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    dispatch(addTask({...taskData, id: Date.now()}));
+    dispatch(addTask({...taskData, id: Date.now().toString()}));
     onClose();
   };
 
