@@ -5,6 +5,7 @@ interface Modals {
   showTime: boolean;
   showPriority: boolean;
   showAddTask: boolean;
+  showDeleteMessage: boolean;
 }
 
 const initialState: Modals = {
@@ -12,6 +13,7 @@ const initialState: Modals = {
   showTime: false,
   showPriority: false,
   showAddTask: false,
+  showDeleteMessage: false,
 };
 
 const modalsSlice = createSlice({
@@ -30,6 +32,9 @@ const modalsSlice = createSlice({
     toggleAddTaskModal: state => {
       state.showAddTask = !state.showAddTask;
     },
+    toggleShowDeleteMessageModal: state => {
+      state.showDeleteMessage = !state.showDeleteMessage;
+    },
   },
 });
 
@@ -38,6 +43,7 @@ export const {
   toggleDateModal,
   togglePriorityModal,
   toggleTimeModal,
+  toggleShowDeleteMessageModal,
 } = modalsSlice.actions;
 
 export default modalsSlice.reducer;

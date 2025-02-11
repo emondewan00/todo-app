@@ -1,12 +1,6 @@
 import {View, Text, FlatList, Pressable, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import Icon from '@react-native-vector-icons/fontawesome6';
-
-// TODO: close modals and set priority data to task data object
-
-// 1. Close modal function
-// 2. Set priority data function
-
 interface Props {
   onClose: () => void;
   onChangePriority: (priority: number) => void;
