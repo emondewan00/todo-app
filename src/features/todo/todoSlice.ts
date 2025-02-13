@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
-import type {TasksState} from '../../types/task';
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
+import type {Task, TasksState} from '../../types/task';
 
 const initialState: TasksState = {
   tasks: [
@@ -30,6 +30,26 @@ const tasksSlice = createSlice({
         section => section.data.length > 0,
       );
     },
+    updateTask: (
+      state,
+      action: PayloadAction<{
+        status: string;
+        taskId: string;
+        taskData: Task;
+      }>,
+    ) => {
+      const {status, taskId, taskData} = action.payload;
+      const category = state.tasks.find(t => t.title === status);
+      if (category) {
+        category.data = category.data.map(task =>
+          task.id === taskId ? {...task, ...taskData} : task,
+        );
+      }
+      // Update render able Tasks
+      state.renderAbleTasks = state.tasks.filter(
+        section => section.data.length > 0,
+      );
+    },
     removeTask: (state, action) => {
       const {status, taskId} = action.payload;
       const category = state.tasks.find(t => t.title === status);
@@ -44,5 +64,5 @@ const tasksSlice = createSlice({
   },
 });
 
-export const {addTask, removeTask} = tasksSlice.actions;
+export const {addTask, removeTask, updateTask} = tasksSlice.actions;
 export default tasksSlice.reducer;

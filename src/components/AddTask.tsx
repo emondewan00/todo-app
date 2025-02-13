@@ -16,36 +16,46 @@ import RNDateTimePicker, {
 import Priority from './Priority';
 import type {Task} from '../types/task';
 import {useAppDispatch, useAppSelector} from '../hooks';
-import {addTask} from '../features/todo/todoSlice';
+import {addTask, updateTask} from '../features/todo/todoSlice';
 import {
   toggleDateModal,
   togglePriorityModal,
   toggleTimeModal,
 } from '../features/modal/modalSlice';
 
+interface AddTaskProps {
+  onClose: () => void;
+  task?: Task;
+  status?: string;
+}
+
 interface OnChangeArgs {
   name: keyof Task;
   value: string | boolean | number;
 }
 
-const AddTask = ({onClose}: {onClose: () => void}) => {
+const defaultTask = {
+  id: Date.now().toString(),
+  title: '',
+  description: '',
+  dueDate: Date.now(),
+  dueTime: Date.now(),
+  priority: 1,
+  completed: false,
+};
+
+const AddTask: React.FC<AddTaskProps> = ({
+  onClose,
+  task = defaultTask,
+  status,
+}) => {
   const inputRef = useRef<TextInput | null>(null);
   const {showDate, showTime, showPriority} = useAppSelector(
     state => state.modal,
   );
   const dispatch = useAppDispatch();
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const [taskData, setTaskData] = useState<Task>({
-    id: Date.now().toString(),
-    title: '',
-    description: '',
-    dueDate: Date.now(),
-    dueTime: Date.now(),
-    priority: 1,
-    completed: false,
-  });
+  const [taskData, setTaskData] = useState<Task>(task);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -58,7 +68,6 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
 
   const handleDateChange = (event: DateTimePickerEvent, date?: Date) => {
     if (date) {
-      setSelectedDate(date);
       setTaskData({
         ...taskData,
         dueDate: date.getTime(),
@@ -90,7 +99,19 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
-    dispatch(addTask({...taskData, id: Date.now().toString()}));
+
+    if (status) {
+      dispatch(
+        updateTask({
+          status,
+          taskId: taskData.id,
+          taskData: taskData,
+        }),
+      );
+    } else {
+      dispatch(addTask({...taskData, id: Date.now().toString()}));
+    }
+
     onClose();
   };
 
@@ -105,12 +126,14 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
           className="border mt-3 border-white px-4 py-2 rounded text-white"
           placeholderTextColor={'white'}
           ref={inputRef}
+          value={taskData.title}
           onChangeText={text => onChange({name: 'title', value: text})}
           placeholder="Do math homework"
         />
         <TextInput
           className="border mt-3 border-white px-4 py-2 rounded text-white"
           placeholderTextColor={'white'}
+          value={taskData.description}
           onChangeText={text => onChange({name: 'description', value: text})}
           placeholder="Do chapter 2 for next week"
         />
@@ -142,7 +165,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
         {showDate && (
           <RNDateTimePicker
             testID="dateTimePicker"
-            value={selectedDate}
+            value={new Date(taskData.dueDate)}
             mode="date"
             display="default"
             onChange={handleDateChange}
@@ -152,7 +175,7 @@ const AddTask = ({onClose}: {onClose: () => void}) => {
         {showTime && (
           <RNDateTimePicker
             testID="timePicker"
-            value={selectedDate}
+            value={new Date(taskData.dueTime)}
             mode="time"
             display="default"
             onChange={handleTimeChange}

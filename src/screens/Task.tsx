@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, Pressable, Modal} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import type {TaskScreenProps} from '../types/navigation';
 import Icon from '@react-native-vector-icons/fontawesome6';
 import {useAppDispatch, useAppSelector} from '../hooks';
@@ -10,6 +10,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {removeTask} from '../features/todo/todoSlice';
 import DeleteMessage from '../components/DeleteMessage';
 import {toggleShowDeleteMessageModal} from '../features/modal/modalSlice';
+import AddTask from '../components/AddTask';
 
 const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
   const {taskId, sectionId} = route.params;
@@ -39,6 +40,7 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
   const {showDeleteMessage} = useAppSelector(state => state.modal);
   const task = useAppSelector(state => findTask(state.todo.tasks));
   const dispatch = useAppDispatch();
+  const [editModal, setEditModal] = useState(false);
 
   const deleteTask = () => {
     dispatch(removeTask({status: sectionId, taskId}));
@@ -49,7 +51,7 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
     <SafeAreaView className="flex-1 bg-[#121212] px-6">
       <View className="flex-1">
         <View className="flex flex-row justify-between mt-2.5 mb-7">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <View className="rounded w-8 h-8 bg-[#1D1D1D] justify-center items-center p-1">
               <Text className="text-white ">X</Text>
             </View>
@@ -76,7 +78,6 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
                 </Text>
               </View>
             </View>
-
             <TaskInfoRow
               content={'Today at 9:00 PM'}
               iconName="clock"
@@ -92,7 +93,6 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
               iconName="flag"
               title="Task Priority:"
             />
-
             <Pressable
               onPress={() => dispatch(toggleShowDeleteMessageModal())}
               className="flex flex-row gap-x-2 items-center mt-7">
@@ -104,7 +104,6 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
               />
               <Text className="text-[#FF4949]">Delete Task</Text>
             </Pressable>
-
             {showDeleteMessage && (
               <Modal
                 visible={showDeleteMessage}
@@ -118,10 +117,25 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
                 />
               </Modal>
             )}
-
-            <View className=" bg-[#8687E7]  py-3 rounded mt-auto mb-6">
+            <Pressable
+              onPress={() => setEditModal(true)}
+              className=" bg-[#8687E7]  py-3 rounded mt-auto mb-6">
               <Text className="text-white text-center">Edit Task</Text>
-            </View>
+            </Pressable>
+
+            {
+              <Modal
+                visible={editModal}
+                animationType="fade"
+                onRequestClose={() => setEditModal(false)}
+                transparent>
+                <AddTask
+                  onClose={() => setEditModal(false)}
+                  task={task}
+                  status={sectionId}
+                />
+              </Modal>
+            }
           </View>
         )}
       </View>
