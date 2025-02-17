@@ -16,4 +16,6 @@ export interface TaskSection {
 export interface TasksState {
   tasks: TaskSection[];
   readonly renderAbleTasks: TaskSection[];
+  searchTerm: string;
+ taskCount: number;
 }

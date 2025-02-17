@@ -8,20 +8,24 @@ import {
 import React from 'react';
 import Icon from '@react-native-vector-icons/fontawesome6';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import {useAppSelector} from '../hooks';
+import {useAppDispatch, useAppSelector} from '../hooks';
+import {searchTasks} from '../features/todo/todoSlice';
 
 type TaskListProps = {
   onClickTask: (taskId: string, sectionId: string) => void;
 };
 
 const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
-  const {renderAbleTasks} = useAppSelector(state => state.todo);
-
+  const {renderAbleTasks, searchTerm} = useAppSelector(state => state.todo);
+  const dispatch = useAppDispatch();
+  console.log(renderAbleTasks, searchTerm);
   return (
     <View className="px-6 pt-4 pb-20">
       <View className="flex flex-row items-center mb-4 border border-[#979797] rounded p-3 bg-[#1D1D1D] gap-x-3">
         <Ionicons name="search-outline" size={24} color={'#AFAFAF'} />
         <TextInput
+        value={searchTerm}
+          onChangeText={text => dispatch(searchTasks(text))}
           className="grow text-white"
           placeholderTextColor={'white'}
           placeholder="Search for your task..."

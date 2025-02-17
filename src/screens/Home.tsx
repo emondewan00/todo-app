@@ -6,7 +6,7 @@ import {useAppSelector} from '../hooks';
 import {HomeScreenProps} from '../types/navigation';
 
 const Home: React.FC<HomeScreenProps> = ({navigation}) => {
-  const {renderAbleTasks} = useAppSelector(state => state.todo);
+  const {taskCount} = useAppSelector(state => state.todo);
 
   const navigateTask = (id: string, sectionId: string) => {
     navigation.navigate('Task', {taskId: id, sectionId});
@@ -14,7 +14,7 @@ const Home: React.FC<HomeScreenProps> = ({navigation}) => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212]">
-      {renderAbleTasks.length === 0 ? (
+      {taskCount === 0 ? (
         <EmptyTask />
       ) : (
         <TaskList onClickTask={navigateTask} />

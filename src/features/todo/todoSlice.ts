@@ -13,6 +13,8 @@ const initialState: TasksState = {
     },
   ],
   renderAbleTasks: [],
+  searchTerm: '',
+  taskCount: 0,
 };
 
 const tasksSlice = createSlice({
@@ -25,6 +27,7 @@ const tasksSlice = createSlice({
         category.data.push(action.payload);
       }
 
+      state.taskCount++;
       // Update render able Tasks
       state.renderAbleTasks = state.tasks.filter(
         section => section.data.length > 0,
@@ -56,13 +59,24 @@ const tasksSlice = createSlice({
       if (category) {
         category.data = category.data.filter(task => task.id !== taskId);
       }
+
+      state.taskCount--;
       // Update render able Tasks
       state.renderAbleTasks = state.tasks.filter(
         section => section.data.length > 0,
       );
     },
+    searchTasks: (state, action) => {
+      state.searchTerm = action.payload;
+      state.renderAbleTasks = state.tasks.filter(section =>
+        section.data.some(task =>
+          task.title.toLowerCase().includes(state.searchTerm.toLowerCase()),
+        ),
+      );
+    },
   },
 });
 
-export const {addTask, removeTask, updateTask} = tasksSlice.actions;
+export const {addTask, removeTask, updateTask, searchTasks} =
+  tasksSlice.actions;
 export default tasksSlice.reducer;
