@@ -10,6 +10,7 @@ import Icon from '@react-native-vector-icons/fontawesome6';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import {useAppDispatch, useAppSelector} from '../hooks';
 import {searchTasks} from '../features/todo/todoSlice';
+import getRelativeTime from '../utils/getRelativeTime';
 
 type TaskListProps = {
   onClickTask: (taskId: string, sectionId: string) => void;
@@ -18,13 +19,13 @@ type TaskListProps = {
 const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
   const {renderAbleTasks, searchTerm} = useAppSelector(state => state.todo);
   const dispatch = useAppDispatch();
-  console.log(renderAbleTasks, searchTerm);
+
   return (
     <View className="px-6 pt-4 pb-20">
       <View className="flex flex-row items-center mb-4 border border-[#979797] rounded p-3 bg-[#1D1D1D] gap-x-3">
         <Ionicons name="search-outline" size={24} color={'#AFAFAF'} />
         <TextInput
-        value={searchTerm}
+          value={searchTerm}
           onChangeText={text => dispatch(searchTasks(text))}
           className="grow text-white"
           placeholderTextColor={'white'}
@@ -50,11 +51,7 @@ const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
                 <Text className="text-white">{item.title}</Text>
                 <View className="flex flex-row justify-between mt-1.5">
                   <Text className="text-[#AFAFAF] text-sm">
-                    Today At{' '}
-                    {new Date(item.dueTime).toLocaleTimeString([], {
-                      minute: '2-digit',
-                      hour: '2-digit',
-                    })}
+                    {getRelativeTime(item.dueTime)}
                   </Text>
                   <View className="ml-auto flex flex-row gap-x-2">
                     <View className="bg-[#809CFF] py-1 px-2 rounded flex flex-row gap-x-1 items-center">
