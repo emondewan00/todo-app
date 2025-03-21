@@ -50,14 +50,14 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
   return (
     <SafeAreaView className="flex-1 bg-[#121212] px-6">
       <View className="flex-1">
-        <View className="flex flex-row justify-between mt-2.5 mb-7">
+        <View className="flex flex-row justify-between mt-2.5 mb-7 border-b border-white/20 pb-4 px-2">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <View className="rounded w-8 h-8 bg-[#1D1D1D] justify-center items-center p-1">
-              <Text className="text-white ">X</Text>
+            <View>
+              <Icon name="xmark" iconStyle="solid" size={16} color={'white'} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity>
-            <View className="rounded w-8 h-8 bg-[#1D1D1D] justify-center items-center p-1">
+            <View>
               <Icon name="repeat" iconStyle="solid" size={16} color="white" />
             </View>
           </TouchableOpacity>

@@ -28,14 +28,14 @@ const Priority = ({onChangePriority, onClose}: Props) => {
               return (
                 <Pressable
                   onPress={() => setSelectedPriority(item)}
-                  className={`size-[72px] items-center justify-center rounded  ${
+                  className={`size-[64px] items-center justify-center rounded  ${
                     isSelected ? 'bg-[#8687E7]' : 'bg-[#272727]'
                   }`}>
                   <Icon
                     name="flag"
                     color={'white'}
                     iconStyle="regular"
-                    size={20}
+                    size={16}
                   />
                   <Text className="text-white  mt-1 text-lg">{item}</Text>
                 </Pressable>
@@ -44,7 +44,7 @@ const Priority = ({onChangePriority, onClose}: Props) => {
           />
         </View>
 
-        <View className="flex-row justify-between ">
+        <View className="flex-row justify-between pb-6">
           <TouchableOpacity onPress={onClose} className="w-[48%]">
             <Text className="text-[#8875FF] text-center px-6 py-3">Cancel</Text>
           </TouchableOpacity>
