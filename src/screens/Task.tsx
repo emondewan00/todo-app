@@ -50,15 +50,25 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
   return (
     <SafeAreaView className="flex-1 bg-[#121212] px-6">
       <View className="flex-1">
-        <View className="flex flex-row justify-between mt-2.5 mb-7 border-b border-white/20 pb-4 px-2">
+        <View className="flex flex-row justify-between mt-2.5 mb-7 pb-4 px-2">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <View>
-              <Icon name="xmark" iconStyle="solid" size={16} color={'white'} />
+              <Icon
+                name="arrow-left"
+                iconStyle="solid"
+                size={20}
+                color="white"
+              />
             </View>
           </TouchableOpacity>
+          <View>
+            <Text className="text-white text-center font-bold text-lg">
+              Task
+            </Text>
+          </View>
           <TouchableOpacity>
             <View>
-              <Icon name="repeat" iconStyle="solid" size={16} color="white" />
+              <Icon name="check" iconStyle="solid" size={20} color="green" />
             </View>
           </TouchableOpacity>
         </View>
@@ -82,11 +92,6 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
               content={'Today at 9:00 PM'}
               iconName="clock"
               title="Task Time:"
-            />
-            <TaskInfoRow
-              content={'University'}
-              iconName="tag"
-              title="Task Category:"
             />
             <TaskInfoRow
               content={task?.priority.toString() as string}

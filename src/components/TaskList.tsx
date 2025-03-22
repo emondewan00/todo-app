@@ -22,12 +22,12 @@ const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
 
   return (
     <View className="px-6 pt-4 pb-20">
-      <View className="flex flex-row items-center mb-4 border border-[#979797] rounded p-3 bg-[#1D1D1D] gap-x-3">
-        <Ionicons name="search-outline" size={24} color={'#AFAFAF'} />
+      <View className="flex flex-row items-center mb-4 border border-[#979797] rounded p-2.5 bg-[#1D1D1D] gap-x-3">
+        <Ionicons name="search-outline" size={20} color={'#AFAFAF'} />
         <TextInput
           value={searchTerm}
           onChangeText={text => dispatch(searchTasks(text))}
-          className="grow text-white"
+          className="grow text-white p-0 "
           placeholderTextColor={'white'}
           placeholder="Search for your task..."
         />
@@ -54,7 +54,7 @@ const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
                     {getRelativeTime(item.dueTime)}
                   </Text>
                   <View className="ml-auto flex flex-row gap-x-2">
-                    <View className="bg-[#809CFF] py-1 px-2 rounded flex flex-row gap-x-1 items-center">
+                    {/* <View className="bg-[#809CFF] py-1 px-2 rounded flex flex-row gap-x-1 items-center">
                       <Icon
                         name="graduation-cap"
                         size={14}
@@ -62,7 +62,7 @@ const TaskList: React.FC<TaskListProps> = ({onClickTask}) => {
                         iconStyle="solid"
                       />
                       <Text className="text-white">University</Text>
-                    </View>
+                    </View> */}
                     <View className="border border-[#8687E7] py-1 px-2 rounded flex flex-row gap-x-1 items-center">
                       <Icon name="flag" size={14} color={'white'} />
                       <Text className="text-white text-sm">
