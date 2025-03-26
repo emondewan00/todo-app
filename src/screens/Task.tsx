@@ -7,7 +7,7 @@ import {useAppDispatch, useAppSelector} from '../hooks';
 import type {Task as TaskType, TaskSection} from '../types/task';
 import TaskInfoRow from '../components/TaskInfoRow';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {removeTask} from '../features/todo/todoSlice';
+import {removeTask, toggleStatus} from '../features/todo/todoSlice';
 import DeleteMessage from '../components/DeleteMessage';
 import {toggleShowDeleteMessageModal} from '../features/modal/modalSlice';
 import AddTask from '../components/AddTask';
@@ -47,6 +47,12 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
     navigation.goBack();
   };
 
+
+  const changeStatus = () => {
+   dispatch(toggleStatus({status: sectionId, taskId: taskId}));
+   navigation.goBack(); 
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#121212] px-6">
       <View className="flex-1">
@@ -66,10 +72,9 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
               Task
             </Text>
           </View>
-          <TouchableOpacity>
-            <View>
-              <Icon name="check" iconStyle="solid" size={20} color="green" />
-            </View>
+          <TouchableOpacity
+            onPress={changeStatus}>
+            <Icon name="check" iconStyle="solid" size={20} color="green" />
           </TouchableOpacity>
         </View>
 

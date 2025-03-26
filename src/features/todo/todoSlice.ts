@@ -66,6 +66,23 @@ const tasksSlice = createSlice({
         section => section.data.length > 0,
       );
     },
+    toggleStatus: (state, action) => {
+      const {status, taskId} = action.payload;
+      const category = state.tasks.find(t => t.title === status);
+      if (category) {
+        const taskIndex = category.data.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+          const task = category.data.splice(taskIndex, 1)[0];
+          const newStatus = status === 'active' ? 'completed' : 'active';
+          const newCategory = state.tasks.find(t => t.title === newStatus);
+          newCategory?.data.push(task);
+        }
+      }
+      // Update render able Tasks
+      state.renderAbleTasks = state.tasks.filter(
+        section => section.data.length > 0,
+      );
+    },
     searchTasks: (state, action) => {
       state.searchTerm = action.payload;
       state.renderAbleTasks = state.tasks.filter(section =>
@@ -77,6 +94,6 @@ const tasksSlice = createSlice({
   },
 });
 
-export const {addTask, removeTask, updateTask, searchTasks} =
+export const {addTask, removeTask, updateTask, searchTasks, toggleStatus} =
   tasksSlice.actions;
 export default tasksSlice.reducer;
