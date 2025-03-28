@@ -80,6 +80,17 @@ const TabNavigation: React.FC<TabNavigationProps> = ({navigation}) => {
             tabBarButton: props => (
               <TabButton {...props} title="Calender" iconName="calendar-days" />
             ),
+            headerTitle: 'Calender',
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#121212',
+              height: 80,
+            },
+            headerTitleStyle: {
+              color: 'white',
+              fontWeight: 'normal',
+            },
+            headerShadowVisible: true,
           }}
           name="Calender"
           component={Calender}

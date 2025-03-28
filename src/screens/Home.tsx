@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import EmptyTask from '../components/EmptyTask';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import TaskList from '../components/TaskList';
@@ -7,6 +7,12 @@ import {HomeScreenProps} from '../types/navigation';
 
 const Home: React.FC<HomeScreenProps> = ({navigation}) => {
   const {taskCount} = useAppSelector(state => state.todo);
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Calender');
+    }, 10);
+  }, [navigation]);
 
   const navigateTask = (id: string, sectionId: string) => {
     navigation.navigate('Task', {taskId: id, sectionId});
