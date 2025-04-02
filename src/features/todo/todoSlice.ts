@@ -22,6 +22,13 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     addTask: (state, action) => {
+      action.payload.dueDate = new Date(action.payload.dueDate).setHours(
+        0,
+        0,
+        0,
+        0,
+      );
+
       const category = state.tasks.find(t => t.title === 'active');
       if (category) {
         category.data.push(action.payload);
