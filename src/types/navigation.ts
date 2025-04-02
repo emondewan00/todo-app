@@ -46,3 +46,7 @@ export type AddNewScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'AddNew'>,
   NativeStackScreenProps<RootStackParamList>
 >;
+export type CalenderScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, 'Calender'>,
+  NativeStackScreenProps<RootStackParamList>
+>;

@@ -4,8 +4,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from '@react-native-vector-icons/ionicons';
 import {useAppSelector} from '../hooks';
 import getRelativeTime from '../utils/getRelativeTime';
+import {CalenderScreenProps} from '../types/navigation';
 
-const Calender = () => {
+const Calender: React.FC<CalenderScreenProps> = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [days, setDays] = useState<string[]>([]);
@@ -53,9 +54,11 @@ const Calender = () => {
         );
       });
 
-    return filteredTasks;
+    return filteredTasks || [];
   };
-
+  const onClickTask = (id: string, sectionId: string) => {
+    navigation.navigate('Task', {taskId: id, sectionId});
+  };
   return (
     <SafeAreaView className="flex-1 bg-[#121212] pb-32">
       <View className=" bg-[#363636] p-4">
@@ -139,7 +142,7 @@ const Calender = () => {
         </Pressable>
       </View>
 
-      {/* <FlatList
+      <FlatList
         data={filterTasks()}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
@@ -147,7 +150,7 @@ const Calender = () => {
         renderItem={({item}) => {
           return (
             <TouchableOpacity
-              // onPress={() => onClickTask(item.id.toString(), section.title)}
+              onPress={() => onClickTask(item.id.toString(), activeTab)}
               activeOpacity={0.6}
               className="bg-[#363636] py-3 px-[10px] rounded flex flex-row gap-x-4 items-center">
               <View>
@@ -172,7 +175,7 @@ const Calender = () => {
             </TouchableOpacity>
           );
         }}
-      /> */}
+      />
     </SafeAreaView>
   );
 };

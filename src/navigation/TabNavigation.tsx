@@ -41,8 +41,9 @@ const TabNavigation: React.FC<TabNavigationProps> = ({navigation}) => {
             headerRight: () => (
               <View className="mr-6">
                 <Image
-                  source={require('../assets/images/person.png')}
-                  alt="profile photo "
+                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                  alt="profile photo"
+                  className="rounded-full size-10"
                 />
               </View>
             ),
