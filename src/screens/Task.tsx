@@ -44,14 +44,14 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
 
   const deleteTask = () => {
     dispatch(removeTask({status: sectionId, taskId}));
+    dispatch(toggleShowDeleteMessageModal());
     navigation.goBack();
   };
 
-
   const changeStatus = () => {
-   dispatch(toggleStatus({status: sectionId, taskId: taskId}));
-   navigation.goBack(); 
-  }
+    dispatch(toggleStatus({status: sectionId, taskId: taskId}));
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#121212] px-6">
@@ -72,9 +72,12 @@ const Task: React.FC<TaskScreenProps> = ({route, navigation}) => {
               Task
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={changeStatus}>
-            <Icon name="check" iconStyle="solid" size={20} color="green" />
+          <TouchableOpacity onPress={changeStatus}>
+            {sectionId === 'completed' ? (
+              <Icon name="check" iconStyle="solid" size={20} color="green" />
+            ) : (
+              <Icon name="clock" iconStyle="solid" size={20} color="white" />
+            )}
           </TouchableOpacity>
         </View>
 
