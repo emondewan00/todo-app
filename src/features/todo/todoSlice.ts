@@ -92,11 +92,20 @@ const tasksSlice = createSlice({
     },
     searchTasks: (state, action) => {
       state.searchTerm = action.payload;
-      state.renderAbleTasks = state.tasks.filter(section =>
-        section.data.some(task =>
+
+      if (state.searchTerm === '') {
+        state.renderAbleTasks = state.tasks.filter(
+          section => section.data.length > 0,
+        );
+        return;
+      }
+
+      state.renderAbleTasks = state.tasks.map(section => {
+        const filteredData = section.data.filter(task =>
           task.title.toLowerCase().includes(state.searchTerm.toLowerCase()),
-        ),
-      );
+        );
+        return {...section, data: filteredData};
+      });
     },
   },
 });
